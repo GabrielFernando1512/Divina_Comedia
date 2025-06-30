@@ -71,11 +71,35 @@
     .oculto {
       color: #1a1a1a;
     }
+    #controleMusica {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 999;
+    }
+    #controleMusica button {
+      background-color: #8b0000;
+      color: #f2f2f2;
+      border: none;
+      padding: 10px 16px;
+      margin: 2px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    #controleMusica button:hover {
+      background-color: #a30000;
+    }
   </style>
 </head>
 <body>
 
-<audio id="audioFundo" src="tua-musica.mp3" autoplay loop></audio>
+<audio id="audioFundo" src="tua-musica.mp3" loop></audio>
+
+<div id="controleMusica">
+  <button onclick="tocarMusica()">🎵</button>
+  <button onclick="pararMusica()">🔇</button>
+</div>
 
 <div id="banner">
   <h1>O Inferno de Dante</h1>
@@ -132,6 +156,17 @@
       alert('Resposta errada, alma condenada.');
       location.reload();
     }
+  }
+
+  function tocarMusica() {
+    var audio = document.getElementById("audioFundo");
+    audio.play();
+  }
+
+  function pararMusica() {
+    var audio = document.getElementById("audioFundo");
+    audio.pause();
+    audio.currentTime = 0;
   }
 
   carregarEnigma();

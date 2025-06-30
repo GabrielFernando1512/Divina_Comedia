@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>O Inferno de Dante</title>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: #f2f2f2;
+      font-family: Georgia, serif;
+      text-align: center;
+      padding: 20px;
+    }
+    #banner {
+      background: url('o-enigma.jpg') no-repeat center;
+      background-size: cover;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #f2f2f2;
+      text-shadow: 2px 2px 6px #000;
+      border-bottom: 3px solid #8b0000;
+      filter: grayscale(100%);
+    }
+    #banner h1 {
+      font-size: 60px;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+    #banner h2 {
+      font-size: 28px;
+      margin: 8px 0 0 0;
+    }
+    .enigma {
+      margin: 50px auto;
+      max-width: 800px;
+      font-size: 22px;
+      line-height: 1.6;
+      padding: 20px;
+      border: 1px solid #333;
+      background-color: #1a1a1a;
+      border-radius: 8px;
+    }
+    #dica {
+      font-style: italic;
+      margin-top: 20px;
+    }
+    input[type="text"] {
+      padding: 12px;
+      font-size: 20px;
+      width: 280px;
+      margin-top: 20px;
+      border-radius: 4px;
+      border: none;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 20px;
+      margin-left: 12px;
+      cursor: pointer;
+      background-color: #8b0000;
+      color: #f2f2f2;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #a30000;
+    }
+    .oculto {
+      color: #0d0d0d;
+    }
+  </style>
+</head>
+<body>
+
+<audio id="audioFundo" src="tua-musica.mp3" autoplay loop></audio>
+
+<div id="banner">
+  <h1>O Inferno de Dante</h1>
+  <h2 id="circulo">Círculo 1 - Limbo</h2>
+</div>
+
+<div class="enigma" id="enigma"></div>
+<div id="dica"></div>
+
+<input type="text" id="resposta">
+<button onclick="verificarResposta()">Enviar</button>
+
+<script>
+  const enigmas = [
+    {
+      circulo: 'Círculo 1 - Limbo',
+      texto: 'Com olhos de águia e cota de malha reluzente, o grande César, no limbo esquecido, fitou à sua destra. Ali, entre três vultos ancestrais, sussurrou nomeando o guardião: FHUEHUR',
+      resposta: 'CERBERO'
+    },
+    {
+      circulo: 'Círculo 2 - Luxúria',
+      texto: 'A paixão proibida dança nos ventos do segundo círculo. Seu nome vive acorrentado por Blaise Vig., e somente a condenada por ama-lo poderá ajudar.<span class="oculto"> (UROYQ)</span>',
+      resposta: 'PAOLO'
+    },
+    {
+      circulo: 'Círculo 3 - Gula',
+      texto: '<em>Pela criptografia dos porcos, lhes digo:</em><br><br>🝕ᒧ  ᐱ⪽⟔ᒧᒪᒥ⊐ᒧ⊐☐  ☐ᐳ☐⟔🝕ᒧ  ⪽  ᒬ⟔⪽⊏☐ᐳᒧ  ⊐⪽ᐯ  ᒬ☐ᒪᒧ⊐⪽ᐯ  ⟔☐ᐱ☐ᒷᒧ  ⪽  ⊐☐ᐯᐳᒥ🝕⪽  ᐯ⪽⪾⊔⟔ᒥ⪽  ⊐☐  ⊏ᒷ⪽⟔☐🝕ᒪᒧ',
+      resposta: 'CIACCO'
+    }
+  ];
+
+  let indice = 0;
+
+  function carregarEnigma() {
+    document.getElementById('enigma').innerHTML = enigmas[indice].texto;
+    document.getElementById('circulo').innerText = enigmas[indice].circulo;
+    document.getElementById('resposta').value = '';
+    document.getElementById('dica').innerText = '';
+  }
+
+  function verificarResposta() {
+    const input = document.getElementById('resposta').value.trim().toUpperCase();
+    if (input === enigmas[indice].resposta) {
+      indice++;
+      if (indice < enigmas.length) {
+        carregarEnigma();
+      } else {
+        document.getElementById('enigma').innerText = 'Você desvendou os enigmas do Inferno. Mas o verdadeiro terror só começa agora...';
+        document.getElementById('resposta').style.display = 'none';
+        document.querySelector('button').style.display = 'none';
+        document.getElementById('circulo').innerText = 'Inferno Conquistado';
+      }
+    } else {
+      alert('Resposta errada, alma condenada.');
+      location.reload();
+    }
+  }
+
+  carregarEnigma();
+</script>
+
+</body>
+</html>

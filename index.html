@@ -261,8 +261,14 @@ function carregarBanner() {
     const input = document.getElementById('resposta').value.trim().toUpperCase();
     if(input === enigmas[indice].resposta.toUpperCase()) {
       indice++;
-      if(indice < enigmas.length) {
-        carregarEnigma();
+      if(indice<enigmas.length){
+        if(indice === 3){
+          mostrarTransicao('<em>Virgílio te observa em silêncio por um momento e então diz:</em><br><br><em>"Chegaste até aqui, mas restam profundezas mais sombrias. Estes escritos lhe podem ser úteis, melhor manter por perto..."</em>', true);
+        } else {
+          carregarEnigma();
+  }
+}
+
       } else {
         document.getElementById('enigma').innerText = 'Você desvendou os enigmas do Inferno. Mas o verdadeiro terror só começa agora...';
         document.getElementById('resposta').style.display = 'none';
@@ -299,10 +305,27 @@ function carregarBanner() {
   }
 };
 
-
-
-
 </script>
+
+<div id="transicao" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:#000; color:#f2f2f2; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:40px; z-index:99999; text-align:center;">
+  <p id="textoTransicao" style="font-size:24px; max-width:800px; margin-bottom:40px;"></p>
+  <a id="arquivoTransicao" href="A_Divina_Comedia.pdf" download style="display:none; color:#8b0000; font-size:20px; margin-bottom:20px;">📜 Baixar manuscrito</a>
+  <button onclick="prosseguirTransicao()" style="padding:14px 28px; font-size:22px; background-color:#8b0000; color:#f2f2f2; border:none; border-radius:5px; cursor:pointer;">Seguir adiante</button>
+</div>
+
+<script>
+  function mostrarTransicao(texto, mostrarArquivo=false){
+    document.getElementById('textoTransicao').innerHTML = texto;
+    document.getElementById('transicao').style.display = 'flex';
+    document.getElementById('arquivoTransicao').style.display = mostrarArquivo ? 'block' : 'none';
+  }
+
+  function prosseguirTransicao(){
+    document.getElementById('transicao').style.display = 'none';
+    carregarEnigma();
+  }
+</script>
+
 
 </body>
 </html>

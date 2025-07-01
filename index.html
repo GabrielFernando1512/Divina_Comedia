@@ -36,10 +36,9 @@
       margin: 0 0 20px 0;
       font-size: 22px;
     }
-    #abertura p.virgilio {
-      font-style: italic;
-    }
     #placa {
+      margin: 0;
+      padding: 0;
       color: #8b0000;
       font-size: 32px;
       font-weight: bold;
@@ -93,10 +92,8 @@
       border: 1px solid #333;
       background-color: #1a1a1a;
       border-radius: 8px;
-      font-style: italic; /* Falas do Virgílio */
     }
     #dica {
-      font-style: italic;
       margin-top: 20px;
     }
     input[type="text"] {
@@ -145,15 +142,15 @@
 
 <div id="abertura">
   <audio id="musica" src="tua-musica.mp3" loop></audio>
-  <p id="fala1" class="virgilio" style="display:none;">
+  <p id="fala1" style="display:none;">
     Virgílio aproxima-se da grande arcada de pedra e aponta para a placa entalhada há eras:
   </p>
   <p id="placa" style="display:none;">
     “Abandonai toda a esperança, vós que entrais.”
   </p>
-  <p id="fala2" class="virgilio" style="display:none;">
+  <p id="fala2" style="display:none;">
     Virgílio retorna a falar, sem desviar os olhos da escuridão adiante:<br />
-    “Estas são as palavras que selam o caminho para o tormento eterno. Nenhuma alma cruza este umbral e retorna a ser a mesma.”
+    <i>“Estas são as palavras que selam o caminho para o tormento eterno. Nenhuma alma cruza este umbral e retorna a ser a mesma.”</i>
   </p>
   <button id="btnProsseguir" onclick="mostrarProximo()">Prosseguir</button>
 </div>

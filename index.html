@@ -178,12 +178,13 @@
   function mostrarProximo() {
     etapa++;
     if (etapa === 1) {
-      document.getElementsByClassName('virgilio')[0].style.display = 'block';
+      document.getElementById('fala1').style.display = 'block';
     } else if (etapa === 2) {
       document.getElementById('placa').style.display = 'block';
     } else if (etapa === 3) {
-      document.getElementsByClassName('virgilio')[1].style.display = 'block';
+      document.getElementById('fala2').style.display = 'block';
       document.getElementById('btnProsseguir').innerText = 'Começar';
+    }
     } else {
       document.getElementById('abertura').style.display = 'none';
       musica.play();

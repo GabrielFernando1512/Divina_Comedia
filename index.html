@@ -145,9 +145,9 @@
   <p id="fala1" style="display:none;">
     Virgílio aproxima-se da grande arcada de pedra e aponta para a placa entalhada há eras:
   </p>
-  <p id="placa" style="display:none;">
+  <div id="placa" style="display:none;">
     “Abandonai toda a esperança, vós que entrais.”
-  </p>
+  </div>
   <p id="fala2" style="display:none;">
     Virgílio retorna a falar, sem desviar os olhos da escuridão adiante:<br />
     <i>“Estas são as palavras que selam o caminho para o tormento eterno. Nenhuma alma cruza este umbral e retorna a ser a mesma.”</i>
@@ -208,17 +208,19 @@
 
   // Imagens para o banner
   const imagens = ['dore-1.jpg','dore-2.jpg','dore-3.jpg','dore-4.jpg','dore-5.jpg','dore-6.jpg','dore-7.jpg','dore-8.jpg','caravaggio.jpg'];
-  let imagemEscolhida = imagens[Math.floor(Math.random() * imagens.length)];
 
-  function carregarBanner() {
-    document.getElementById('banner').style.backgroundImage = `url('${imagemEscolhida}')`;
-  }
+function carregarBanner() {
+  const imagemEscolhida = imagens[Math.floor(Math.random() * imagens.length)];
+  const banner = document.getElementById('banner');
+  banner.style.backgroundImage = `url('${imagemEscolhida}')`;
+  banner.setAttribute('data-imagem', imagemEscolhida);
+}
 
   // Enigmas no tom do Virgílio
   const enigmas = [
     {
       circulo: 'Círculo 1 - Limbo',
-      texto: 'Virgílio murmura enquanto aponta para os vultos que vagueiam sem tormento: "Aqui repousam os grandes do passado, privados da luz divina. Ouvi dizer que César, de armadura reluzente, nomeou certa vez o guardião das profundezas. Desvela esse nome oculto entre as palavras: FHUEHUR."',
+      texto: 'Virgílio murmura enquanto aponta para os vultos que vagueiam sem tormento: <i>"Aqui repousam os grandes do passado, privados da luz divina. Ouvi dizer que César, de armadura reluzente, nomeou certa vez o guardião das profundezas. Desvela esse nome oculto entre as palavras: FHUEHUR."<i>',
       resposta: 'CERBERO'
     },
     {

@@ -36,7 +36,7 @@
       margin: 0 0 20px 0;
       font-size: 22px;
     }
-    .virgilio {
+    #abertura p.virgilio {
       font-style: italic;
     }
     #placa {
@@ -45,23 +45,17 @@
       font-weight: bold;
       margin-bottom: 20px;
     }
-    button {
-      background: linear-gradient(145deg, #8b0000, #b22222);
-      border: 2px solid #f2f2f2;
-      border-radius: 8px;
-      padding: 12px 24px;
-      font-size: 20px;
+    #btnProsseguir {
+      padding: 14px 28px;
+      font-size: 22px;
+      background-color: #8b0000;
       color: #f2f2f2;
-      text-transform: uppercase;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
-      transition: all 0.3s ease-in-out;
-      margin: 10px;
-      box-shadow: 0 0 10px rgba(139, 0, 0, 0.6);
     }
-    button:hover {
-      background: #b22222;
-      transform: scale(1.05);
-      box-shadow: 0 0 16px rgba(255, 255, 255, 0.3);
+    #btnProsseguir:hover {
+      background-color: #a30000;
     }
     #banner {
       background-size: cover;
@@ -99,6 +93,7 @@
       border: 1px solid #333;
       background-color: #1a1a1a;
       border-radius: 8px;
+      font-style: italic; /* Falas do Virgílio */
     }
     #dica {
       font-style: italic;
@@ -111,6 +106,19 @@
       margin-top: 20px;
       border-radius: 4px;
       border: none;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 20px;
+      margin: 12px 6px 0 6px;
+      cursor: pointer;
+      background-color: #8b0000;
+      color: #f2f2f2;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #a30000;
     }
     .oculto {
       color: #0d0d0d;
@@ -137,13 +145,13 @@
 
 <div id="abertura">
   <audio id="musica" src="tua-musica.mp3" loop></audio>
-  <p class="virgilio" style="display:none;">
+  <p id="fala1" class="virgilio" style="display:none;">
     Virgílio aproxima-se da grande arcada de pedra e aponta para a placa entalhada há eras:
   </p>
   <p id="placa" style="display:none;">
     “Abandonai toda a esperança, vós que entrais.”
   </p>
-  <p class="virgilio" style="display:none;">
+  <p id="fala2" class="virgilio" style="display:none;">
     Virgílio retorna a falar, sem desviar os olhos da escuridão adiante:<br />
     “Estas são as palavras que selam o caminho para o tormento eterno. Nenhuma alma cruza este umbral e retorna a ser a mesma.”
   </p>
@@ -170,11 +178,9 @@
 <button onclick="mutarSom()">Mutar / Desmutar Música</button>
 
 <script>
+  // Introdução sequencial do Virgílio
   let etapa = 0;
   const musica = document.getElementById('musica');
-  const imagens = ['dore-1.jpg','dore-2.jpg','dore-3.jpg','dore-4.jpg','dore-5.jpg','dore-6.jpg','dore-7.jpg','dore-8.jpg','caravaggio.jpg'];
-  let tocando = true;
-
   function mostrarProximo() {
     etapa++;
     if (etapa === 1) {
@@ -184,7 +190,6 @@
     } else if (etapa === 3) {
       document.getElementById('fala2').style.display = 'block';
       document.getElementById('btnProsseguir').innerText = 'Começar';
-    }
     } else {
       document.getElementById('abertura').style.display = 'none';
       musica.play();
@@ -192,30 +197,41 @@
     }
   }
 
+  // Controle de mutar/desmutar música
+  let tocando = true;
   function mutarSom() {
-    tocando ? (musica.pause(), tocando = false) : (musica.play(), tocando = true);
+    if(tocando){
+      musica.pause();
+      tocando = false;
+    } else {
+      musica.play();
+      tocando = true;
+    }
   }
+
+  // Imagens para o banner
+  const imagens = ['dore-1.jpg','dore-2.jpg','dore-3.jpg','dore-4.jpg','dore-5.jpg','dore-6.jpg','dore-7.jpg','dore-8.jpg','caravaggio.jpg'];
+  let imagemEscolhida = imagens[Math.floor(Math.random() * imagens.length)];
 
   function carregarBanner() {
-    const imagemAleatoria = imagens[Math.floor(Math.random() * imagens.length)];
-    document.getElementById('banner').style.backgroundImage = `url('${imagemAleatoria}')`;
-    document.getElementById('imagemAmpliada').src = imagemAleatoria;
+    document.getElementById('banner').style.backgroundImage = `url('${imagemEscolhida}')`;
   }
 
+  // Enigmas no tom do Virgílio
   const enigmas = [
     {
       circulo: 'Círculo 1 - Limbo',
-      texto: `<p class="virgilio">Virgílio murmura enquanto aponta para os vultos que vagueiam sem tormento: "Aqui repousam os grandes do passado, privados da luz divina. Ouvi dizer que César, de armadura reluzente, nomeou certa vez o guardião das profundezas. Desvela esse nome oculto entre as palavras: FHUEHUR."</p>`,
+      texto: 'Virgílio murmura enquanto aponta para os vultos que vagueiam sem tormento: "Aqui repousam os grandes do passado, privados da luz divina. Ouvi dizer que César, de armadura reluzente, nomeou certa vez o guardião das profundezas. Desvela esse nome oculto entre as palavras: FHUEHUR."',
       resposta: 'CERBERO'
     },
     {
       circulo: 'Círculo 2 - Luxúria',
-      texto: `<p class="virgilio">"Neste redemoinho eterno, um nome ecoa acorrentado pelos próprios desejos. Entre os que amaram além da conta, há um que tua lembrança deve trazer à tona. Somente a que o amou poderia te dizer."</p>`,
+      texto: 'Os ventos uivam sem descanso, arrastando almas desfeitas. Virgílio se inclina e diz: "Neste redemoinho eterno, um nome ecoa acorrentado pelos próprios desejos. Entre os que amaram além da conta, há um que tua lembrança deve trazer à tona. Somente a que o amou poderia te dizer."',
       resposta: 'PAOLO'
     },
     {
       circulo: 'Círculo 3 - Gula',
-      texto: `<p class="virgilio">"As almas devoradas pela gula falam em língua esquecida. Desvenda este nome oculto sob a cifra profana."</p><br><br>🝕ᒧ  ᐱ⪽⟔ᒧᒪᒥ⊐ᒧ⊐☐  ☐ᐳ☐⟔🝕ᒧ  ⪽  ᒬ⟔⪽⊏☐ᐳᒧ  ⊐⪽ᐯ  ᒬ☐ᒪᒧ⊐⪽ᐯ  ⟔☐ᐱ☐ᒷᒧ  ⪽  ⊐☐ᐯᐳᒥ🝕⪽  ᐯ⪽⪾⊔⟔ᒥ⪽  ⊐☐  ⊏ᒷ⪽⟔☐🝕ᒪᒧ',
+      texto: 'Ao pisar na lama pútrida, as bocas famintas ecoam sons indecifráveis. Virgílio aponta para os símbolos profanos: "As almas devoradas pela gula falam em língua esquecida. Desvenda este nome oculto sob a cifra profana."<br><br>🝕ᒧ  ᐱ⪽⟔ᒧᒪᒥ⊐ᒧ⊐☐  ☐ᐳ☐⟔🝕ᒧ  ⪽  ᒬ⟔⪽⊏☐ᐳᒧ  ⊐⪽ᐯ  ᒬ☐ᒪᒧ⊐⪽ᐯ  ⟔☐ᐱ☐ᒷᒧ  ⪽  ⊐☐ᐯᐳᒥ🝕⪽  ᐯ⪽⪾⊔⟔ᒥ⪽  ⊐☐  ⊏ᒷ⪽⟔☐🝕ᒪᒧ',
       resposta: 'CIACCO'
     },
     {

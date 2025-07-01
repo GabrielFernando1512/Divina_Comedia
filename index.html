@@ -6,35 +6,18 @@
   <style>
     @font-face {
       font-family: 'Cinzel Decorative';
-      src: url('CinzelDecorative-Regular.woff2') format('woff2'),    
+      src: url('CinzelDecorative-Regular.woff2') format('woff2');
       font-weight: normal;
       font-style: normal;
     }
     body { background-color: #0d0d0d; color: #f2f2f2; font-family: Georgia, serif; text-align: center; padding: 20px; }
     #abertura {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-      background-color: #000; display: flex; justify-content: center; align-items: center; 
-      z-index: 9999;
-      animation: fadeInScale 3s ease forwards;
-    }
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
     #abertura h1 {
-      color: #8b0000;
-      font-size: 64px;
-      font-family: 'Cinzel Decorative', serif;
-      text-align: center;
-      padding: 20px;
-      opacity: 0;
-      animation: textIn 2s ease forwards 0.5s;
-    }
-    @keyframes fadeInScale {
-      0% { opacity: 0; transform: scale(0.7); }
-      50% { opacity: 1; transform: scale(1.05); }
-      100% { opacity: 0; transform: scale(1); display: none; }
-    }
-    @keyframes textIn {
-      to { opacity: 1; }
-    }
-    #banner { background-size: cover; background-position: center; height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #f2f2f2; text-shadow: 2px 2px 6px #000; border-bottom: 3px solid #8b0000; overflow: hidden; position: relative; }
+      color: #8b0000; font-size: 80px; font-family: 'Cinzel Decorative', serif; text-align: center; padding: 20px; opacity: 0; transition: none; transform: scale(1); }
+    #abertura button {
+      padding: 14px 28px; font-size: 22px; margin-top: 30px; cursor: pointer; background-color: #8b0000; color: #f2f2f2; border: none; border-radius: 5px; display: none; }
+    #banner { background-size: cover; background-position: center; height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #f2f2f2; text-shadow: 2px 2px 6px #000; border-bottom: 3px solid #8b0000; overflow: hidden; position: relative; cursor: pointer; }
     #banner:hover { overflow: auto; }
     #banner h1 { font-size: 60px; margin: 0; letter-spacing: 2px; }
     #banner h2 { font-size: 28px; margin: 8px 0 0 0; }
@@ -44,12 +27,21 @@
     button { padding: 12px 24px; font-size: 20px; margin: 12px 6px 0 6px; cursor: pointer; background-color: #8b0000; color: #f2f2f2; border: none; border-radius: 4px; }
     button:hover { background-color: #a30000; }
     .oculto { color: #0d0d0d; }
+    #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 99999; }
+    #lightbox img { max-width: 90%; max-height: 90%; border: 5px solid #8b0000; }
   </style>
 </head>
 <body>
-<div id="abertura"><h1>Abandonai a esperança, ó vós que entrais</h1></div>
+<div id="abertura">
+  <audio id="impacto" src="impacto.mp3"></audio>
+  <h1 id="fraseAbertura">"Abandonai toda a esperança, vóis que entrais"</h1>
+  <button id="btnProsseguir" onclick="prosseguir()">Prosseguir</button>
+</div>
 <audio id="audioErro" src="tua-musica.mp3"></audio>
-<div id="banner"><h1>O Inferno de Dante</h1><h2 id="circulo">Círculo 1 - Limbo</h2></div>
+<div id="banner" onclick="abrirLightbox()"><h1>O Inferno de Dante</h1><h2 id="circulo">Círculo 1 - Limbo</h2></div>
+<div id="lightbox" onclick="fecharLightbox()">
+  <img id="imagemAmpliada" src="">
+</div>
 <div class="enigma" id="enigma"></div>
 <div id="dica"></div>
 <input type="text" id="resposta"><br>
@@ -60,22 +52,27 @@
 const imagens = ['dore-1.jpg','dore-2.jpg','dore-3.jpg','dore-4.jpg','dore-5.jpg','dore-6.jpg','dore-7.jpg','dore-8.jpg','caravaggio.jpg'];
 let imagemEscolhida = imagens[Math.floor(Math.random() * imagens.length)];
 function carregarBanner() {
-  if(indice === 6){ imagemEscolhida = 'caravaggio.jpg'; }
+  if(indice === 4){ imagemEscolhida = 'caravaggio.jpg'; }
   document.getElementById('banner').style.backgroundImage = `url('${imagemEscolhida}')`;
 }
 const enigmas = [
   {circulo:'Círculo 1 - Limbo',texto:'Com olhos de águia e cota de malha reluzente, o grande César, no limbo esquecido, fitou à sua destra. Ali, entre três vultos ancestrais, sussurrou nomeando o guardião: FHUEHUR',resposta:'CERBERO'},
   {circulo:'Círculo 2 - Luxúria',texto:'A paixão proibida dança nos ventos do segundo círculo. Seu nome vive acorrentado por Blaise Vig., e somente a condenada por ama-lo poderá ajudar.<span class="oculto"> (UROYQ)</span>',resposta:'PAOLO'},
   {circulo:'Círculo 3 - Gula',texto:'<em>Pela criptografia dos porcos, lhes digo:</em><br><br>🝕ᒧ  ᐱ⪽⟔ᒧᒪᒥ⊐ᒧ⊐☐  ☐ᐳ☐⟔🝕ᒧ  ⪽  ᒬ⟔⪽⊏☐ᐳᒧ  ⊐⪽ᐯ  ᒬ☐ᒪᒧ⊐⪽ᐯ  ⟔☐ᐱ☐ᒷᒧ  ⪽  ⊐☐ᐯᐳᒥ🝕⪽  ᐯ⪽⪾⊔⟔ᒥ⪽  ⊐☐  ⊏ᒷ⪽⟔☐🝕ᒪᒧ',resposta:'CIACCO'},
-  {circulo:'Círculo 4 - Avareza',texto:'Busque no livro condenado o sinal de sua perdição.<br><br><strong>Acesse:</strong> <a href="A_Divina_Comedia.pdf" target="_blank">A Divina Comédia (PDF)</a><br><br>Quando as moedas não mais pesarem, encontrarás: VII.61.22.3',resposta:'CARIBDE'},
-  {circulo:'Círculo 7 - Violência',texto:'A imagem da degola julga. Preste atenção no único quadro que não é de Doré. Quando a cabeça rola, o nome da obra selará seu destino.',resposta:'JUDITHBEHEADINGHOLOFERNES'}
+  {circulo:'Círculo 4 - Avareza',texto:'VII.61.22.3',resposta:'CARIBDE'},
+  {circulo:'Círculo 5 - Ira',texto:'Nem toda obra pertence a este inferno. Uma pintura traiçoeira repousa disfarçada. Quando o impostor surgir, clame pelo nome de seu criador.',resposta:'Caravaggio'}
 ];
 let indice = 0;
 function carregarEnigma(){document.getElementById('enigma').innerHTML=enigmas[indice].texto;document.getElementById('circulo').innerText=enigmas[indice].circulo;document.getElementById('resposta').value='';document.getElementById('dica').innerText='';carregarBanner();}
 function verificarResposta(){const input=document.getElementById('resposta').value.trim().toUpperCase();if(input===enigmas[indice].resposta){indice++;if(indice<enigmas.length){carregarEnigma();}else{document.getElementById('enigma').innerText='Você desvendou os enigmas do Inferno. Mas o verdadeiro terror só começa agora...';document.getElementById('resposta').style.display='none';document.querySelector('button').style.display='none';document.getElementById('circulo').innerText='Inferno Conquistado';}}else{document.getElementById('audioErro').play();alert('Resposta errada, alma condenada.');location.reload();}}
 function tocarSom(){document.getElementById('audioErro').play();}
 function mutarSom(){document.getElementById('audioErro').pause();document.getElementById('audioErro').currentTime=0;}
-setTimeout(()=>{document.getElementById('abertura').style.display='none';},3000);
+function abrirLightbox(){document.getElementById('imagemAmpliada').src = imagemEscolhida;document.getElementById('lightbox').style.display = 'flex';}
+function fecharLightbox(){document.getElementById('lightbox').style.display = 'none';}
+window.onload = function() {
+  setTimeout(()=>{document.getElementById('impacto').play();document.getElementById('fraseAbertura').style.opacity = '1';setTimeout(()=>{document.getElementById('btnProsseguir').style.display = 'block';}, 1000);}, 2000);
+}
+function prosseguir() {document.getElementById('abertura').style.display = 'none';document.getElementById('audioErro').src = 'musica.mp3';document.getElementById('audioErro').loop = true;document.getElementById('audioErro').play();}
 carregarEnigma();
 </script>
 </body>

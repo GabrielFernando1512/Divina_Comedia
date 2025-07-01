@@ -4,6 +4,12 @@
   <meta charset="UTF-8" />
   <title>O Inferno de Dante</title>
   <style>
+    @font-face {
+      font-family: 'Cinzel Decorative';
+      src: url('CinzelDecorative-Regular.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
     body {
       background-color: #0d0d0d;
       color: #f2f2f2;
@@ -12,86 +18,275 @@
       padding: 20px;
     }
     #abertura {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      z-index: 9999; padding: 40px; box-sizing: border-box;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      padding: 40px;
+      box-sizing: border-box;
     }
-    #abertura p { max-width: 800px; margin: 0 0 20px 0; font-size: 22px; }
-    #abertura p.virgilio { font-style: italic; }
-    #placa { color: #8b0000; font-size: 36px; font-weight: bold; margin: 20px 0; }
+    #abertura p {
+      max-width: 600px;
+      margin: 0 0 20px 0;
+      font-size: 22px;
+    }
+    #abertura p.virgilio {
+      font-style: italic;
+    }
+    #placa {
+      color: #8b0000;
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
     #btnProsseguir {
-      padding: 14px 28px; font-size: 22px; background-color: #8b0000; color: #f2f2f2;
-      border: none; border-radius: 5px; cursor: pointer; position: fixed; bottom: 40px;
+      padding: 14px 28px;
+      font-size: 22px;
+      background-color: #8b0000;
+      color: #f2f2f2;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
-    .enigma { margin: 50px auto; max-width: 800px; font-size: 22px; line-height: 1.6; padding: 20px;
-      border: 1px solid #333; background-color: #1a1a1a; border-radius: 8px; font-style: italic; }
-    #banner { background-size: cover; background-position: center; height: 300px; display: flex;
-      flex-direction: column; justify-content: center; align-items: center; color: #f2f2f2;
-      text-shadow: 2px 2px 6px #000; border-bottom: 3px solid #8b0000; overflow: hidden; }
-    #banner h1 { font-size: 60px; margin: 0; }
-    #banner h2 { font-size: 28px; margin: 8px 0 0 0; }
+    #btnProsseguir:hover {
+      background-color: #a30000;
+    }
+    #banner {
+      background-size: cover;
+      background-position: center;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #f2f2f2;
+      text-shadow: 2px 2px 6px #000;
+      border-bottom: 3px solid #8b0000;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+    #banner:hover {
+      overflow: auto;
+    }
+    #banner h1 {
+      font-size: 60px;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+    #banner h2 {
+      font-size: 28px;
+      margin: 8px 0 0 0;
+    }
+    .enigma {
+      margin: 50px auto;
+      max-width: 800px;
+      font-size: 22px;
+      line-height: 1.6;
+      padding: 20px;
+      border: 1px solid #333;
+      background-color: #1a1a1a;
+      border-radius: 8px;
+      font-style: italic; /* Falas do Virgílio */
+    }
+    #dica {
+      font-style: italic;
+      margin-top: 20px;
+    }
+    input[type="text"] {
+      padding: 12px;
+      font-size: 20px;
+      width: 280px;
+      margin-top: 20px;
+      border-radius: 4px;
+      border: none;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 20px;
+      margin: 12px 6px 0 6px;
+      cursor: pointer;
+      background-color: #8b0000;
+      color: #f2f2f2;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #a30000;
+    }
+    .oculto {
+      color: #0d0d0d;
+    }
+    #lightbox {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.95);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+    }
+    #lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      border: 5px solid #8b0000;
+    }
   </style>
 </head>
 <body>
 
 <div id="abertura">
   <audio id="musica" src="tua-musica.mp3" loop></audio>
-  <p id="fala1" class="virgilio">Virgílio aproxima-se da grande arcada de pedra e aponta para a placa entalhada há eras:</p>
-  <p id="placa">“Abandonai toda a esperança, vós que entrais.”</p>
-  <p id="fala2" class="virgilio">Virgílio retorna a falar, sem desviar os olhos da escuridão adiante:<br />
-  “Estas são as palavras que selam o caminho para o tormento eterno. Nenhuma alma cruza este umbral e retorna a ser a mesma.”</p>
-  <button id="btnProsseguir" onclick="iniciarEnigma()">Começar</button>
+  <p id="fala1" class="virgilio" style="display:none;">
+    Virgílio aproxima-se da grande arcada de pedra e aponta para a placa entalhada há eras:
+  </p>
+  <p id="placa" style="display:none;">
+    “Abandonai toda a esperança, vós que entrais.”
+  </p>
+  <p id="fala2" class="virgilio" style="display:none;">
+    Virgílio retorna a falar, sem desviar os olhos da escuridão adiante:<br />
+    “Estas são as palavras que selam o caminho para o tormento eterno. Nenhuma alma cruza este umbral e retorna a ser a mesma.”
+  </p>
+  <button id="btnProsseguir" onclick="mostrarProximo()">Prosseguir</button>
 </div>
 
-<div id="banner"><h1>O Inferno de Dante</h1><h2 id="circulo"></h2></div>
+<audio id="audioErro" src="tua-musica.mp3"></audio>
+
+<div id="banner" onclick="abrirLightbox()">
+  <h1>O Inferno de Dante</h1>
+  <h2 id="circulo">Círculo 1 - Limbo</h2>
+</div>
+
+<div id="lightbox" onclick="fecharLightbox()">
+  <img id="imagemAmpliada" src="" />
+</div>
+
 <div class="enigma" id="enigma"></div>
-<input type="text" id="resposta"><br>
+<div id="dica"></div>
+
+<input type="text" id="resposta" /><br />
+
 <button onclick="verificarResposta()">Enviar</button>
-<button onclick="mutarSom()">Mutar/Desmutar Música</button>
+<button onclick="mutarSom()">Mutar / Desmutar Música</button>
 
 <script>
+  // Introdução sequencial do Virgílio
+  let etapa = 0;
   const musica = document.getElementById('musica');
+  function mostrarProximo() {
+    etapa++;
+    if (etapa === 1) {
+      document.getElementById('fala1').style.display = 'block';
+    } else if (etapa === 2) {
+      document.getElementById('placa').style.display = 'block';
+    } else if (etapa === 3) {
+      document.getElementById('fala2').style.display = 'block';
+      document.getElementById('btnProsseguir').innerText = 'Começar';
+    } else {
+      document.getElementById('abertura').style.display = 'none';
+      musica.play();
+      carregarEnigma();
+    }
+  }
+
+  // Controle de mutar/desmutar música
   let tocando = true;
+  function mutarSom() {
+    if(tocando){
+      musica.pause();
+      tocando = false;
+    } else {
+      musica.play();
+      tocando = true;
+    }
+  }
+
+  // Imagens para o banner
   const imagens = ['dore-1.jpg','dore-2.jpg','dore-3.jpg','dore-4.jpg','dore-5.jpg','dore-6.jpg','dore-7.jpg','dore-8.jpg','caravaggio.jpg'];
+  let imagemEscolhida = imagens[Math.floor(Math.random() * imagens.length)];
 
-  function mutarSom(){ tocando ? (musica.pause(), tocando=false) : (musica.play(), tocando=true) }
+  function carregarBanner() {
+    document.getElementById('banner').style.backgroundImage = `url('${imagemEscolhida}')`;
+  }
 
+  // Enigmas no tom do Virgílio
   const enigmas = [
-    {circulo:'Círculo 1 - Limbo', texto:'<em>Virgílio murmura enquanto aponta para os vultos: "Aqui repousam os grandes do passado, privados da luz divina. Ouvi dizer que César nomeou certa vez o guardião das profundezas. Desvela esse nome oculto entre as palavras: FHUEHUR."</em>', resposta:'CERBERO'},
-    {circulo:'Círculo 2 - Luxúria', texto:'<em>"Neste redemoinho eterno, um nome ecoa acorrentado pelos próprios desejos. Entre os que amaram além da conta, há um que tua lembrança deve trazer à tona. Somente a que o amou poderia te dizer."</em>', resposta:'PAOLO'},
-    {circulo:'Círculo 3 - Gula', texto:'<em>Ao pisar na lama pútrida, as bocas famintas ecoam sons indecifráveis. Virgílio aponta para os símbolos profanos: "As almas devoradas pela gula falam em língua esquecida. Desvenda este nome oculto sob a cifra profana."</em><br><br>🝕ᒧ  ᐱ⪽⟔ᒧᒪᒥ⊐ᒧ⊐☐  ☐ᐳ☐⟔🝕ᒧ  ⪽  ᒬ⟔⪽⊏☐ᐳᒧ  ⊐⪽ᐯ  ᒬ☐ᒪᒧ⊐⪽ᐯ  ⟔☐ᐱ☐ᒷᒧ  ⪽  ⊐☐ᐯᐳᒥ🝕⪽  ᐯ⪽⪾⊔⟔ᒥ⪽  ⊐☐  ⊏ᒷ⪽⟔☐🝕ᒪᒧ', resposta:'CIACCO'},
-    {circulo:'Círculo 4 - Avareza', texto:'<em>Virgílio pisa entre os amontoadores e dissipadores e sussurra: "Vês aqueles que rodopiam suas riquezas eternamente. Um número antigo marca o nome de quem tragou tesouros e afundou com eles. Lembra-te de quem os mares devoraram."</em><br><br>VII.61.22.3', resposta:'CARIBDE'},
-    {circulo:'Círculo 5 - Ira', texto:'<em>À beira do Estige, as almas iradas se devoram aos gritos. Virgílio fita o horizonte e adverte: "Entre imagens e visões blasfemas, há uma obra estranha a este inferno. Quando teus olhos notarem o impostor, revela o nome de seu autor profano."</em>', resposta:'CARAVAGGIO'}
+    {
+      circulo: 'Círculo 1 - Limbo',
+      texto: 'Virgílio murmura enquanto aponta para os vultos que vagueiam sem tormento: "Aqui repousam os grandes do passado, privados da luz divina. Ouvi dizer que César, de armadura reluzente, nomeou certa vez o guardião das profundezas. Desvela esse nome oculto entre as palavras: FHUEHUR."',
+      resposta: 'CERBERO'
+    },
+    {
+      circulo: 'Círculo 2 - Luxúria',
+      texto: 'Os ventos uivam sem descanso, arrastando almas desfeitas. Virgílio se inclina e diz: "Neste redemoinho eterno, um nome ecoa acorrentado pelos próprios desejos. Entre os que amaram além da conta, há um que tua lembrança deve trazer à tona. Somente a que o amou poderia te dizer."',
+      resposta: 'PAOLO'
+    },
+    {
+      circulo: 'Círculo 3 - Gula',
+      texto: 'Ao pisar na lama pútrida, as bocas famintas ecoam sons indecifráveis. Virgílio aponta para os símbolos profanos: "As almas devoradas pela gula falam em língua esquecida. Desvenda este nome oculto sob a cifra profana."<br><br>🝕ᒧ  ᐱ⪽⟔ᒧᒪᒥ⊐ᒧ⊐☐  ☐ᐳ☐⟔🝕ᒧ  ⪽  ᒬ⟔⪽⊏☐ᐳᒧ  ⊐⪽ᐯ  ᒬ☐ᒪᒧ⊐⪽ᐯ  ⟔☐ᐱ☐ᒷᒧ  ⪽  ⊐☐ᐯᐳᒥ🝕⪽  ᐯ⪽⪾⊔⟔ᒥ⪽  ⊐☐  ⊏ᒷ⪽⟔☐🝕ᒪᒧ',
+      resposta: 'CIACCO'
+    },
+    {
+      circulo: 'Círculo 4 - Avareza',
+      texto: 'Virgílio pisa entre os amontoadores e dissipadores e sussurra: "Vês aqueles que rodopiam suas riquezas eternamente. Um número antigo marca o nome de quem tragou tesouros e afundou com eles. Lembra-te de quem os mares devoraram."<br><br>VII.61.22.3',
+      resposta: 'CARIBDE'
+    },
+    {
+      circulo: 'Círculo 5 - Ira',
+      texto: 'À beira do Estige, as almas iradas se devoram aos gritos. Virgílio fita o horizonte e adverte: "Entre imagens e visões blasfemas, há uma obra estranha a este inferno. Quando teus olhos notarem o impostor, revela o nome de seu autor profano."',
+      resposta: 'CARAVAGGIO'
+    }
   ];
 
   let indice = 0;
 
-  function iniciarEnigma(){
-    document.getElementById('abertura').style.display='none';
-    musica.play();
+  function carregarEnigma() {
+    document.getElementById('enigma').innerHTML = enigmas[indice].texto;
+    document.getElementById('circulo').innerText = enigmas[indice].circulo;
+    document.getElementById('resposta').value = '';
+    document.getElementById('dica').innerText = '';
+    carregarBanner();
+  }
+
+  function verificarResposta() {
+    const input = document.getElementById('resposta').value.trim().toUpperCase();
+    if(input === enigmas[indice].resposta.toUpperCase()) {
+      indice++;
+      if(indice < enigmas.length) {
+        carregarEnigma();
+      } else {
+        document.getElementById('enigma').innerText = 'Você desvendou os enigmas do Inferno. Mas o verdadeiro terror só começa agora...';
+        document.getElementById('resposta').style.display = 'none';
+        document.querySelector('button').style.display = 'none';
+        document.getElementById('circulo').innerText = 'Inferno Conquistado';
+      }
+    } else {
+      document.getElementById('audioErro').play();
+      alert('Resposta errada, alma condenada.');
+      location.reload();
+    }
+  }
+
+  function abrirLightbox() {
+    document.getElementById('imagemAmpliada').src = imagemEscolhida;
+    document.getElementById('lightbox').style.display = 'flex';
+  }
+
+  function fecharLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+  }
+
+  window.onload = function() {
     carregarEnigma();
   }
-
-  function carregarEnigma(){
-    let img = imagens[Math.floor(Math.random()*imagens.length)];
-    document.getElementById('banner').style.backgroundImage = `url('${img}')`;
-    document.getElementById('circulo').innerText = enigmas[indice].circulo;
-    document.getElementById('enigma').innerHTML = enigmas[indice].texto;
-    document.getElementById('resposta').value='';
-  }
-
-  function verificarResposta(){
-    let input = document.getElementById('resposta').value.trim().toUpperCase();
-    if(input===enigmas[indice].resposta){
-      indice++;
-      if(indice<enigmas.length){ carregarEnigma(); }
-      else{
-        document.getElementById('enigma').innerHTML = '<em>Virgílio sussurra: "Você desvendou os enigmas deste círculo... mas o pior está por vir."</em>';
-      }
-    } else { alert('Errado.'); location.reload(); }
-  }
-
-  window.onload = iniciarEnigma;
 </script>
 
 </body>

@@ -27,10 +27,10 @@
 <div id="dica"></div>
 <input type="text" id="resposta"><button onclick="verificarResposta()">Enviar</button>
 <script>
-const imagens = ['dore-1.jpg','dore-2.jpg','dore-3.jpg','dore-4.jpg','dore-5.jpg','dore-6.jpg','dore-7.jpg','dore-8.jpg','carvaggio.jpg'];
+const imagens = ['dore-1.jpg','dore-2.jpg','dore-3.jpg','dore-4.jpg','dore-5.jpg','dore-6.jpg','dore-7.jpg','dore-8.jpg','caravaggio.jpg'];
 let imagemEscolhida = imagens[Math.floor(Math.random() * imagens.length)];
 function carregarBanner() {
-  if(indice === 6){ imagemEscolhida = 'carvaggio.jpg'; }
+  if(indice === 6){ imagemEscolhida = 'caravaggio.jpg'; }
   document.getElementById('banner').style.backgroundImage = `url('${imagemEscolhida}')`;
 }
 const enigmas = [

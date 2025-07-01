@@ -8,24 +8,28 @@
     #abertura { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #0d0d0d; display: flex; justify-content: center; align-items: center; z-index: 9999; }
     #abertura h1 { color: #f2f2f2; font-size: 48px; font-family: Georgia, serif; text-align: center; padding: 20px; animation: fadeOut 4s ease forwards; }
     @keyframes fadeOut { 0% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; display: none; } }
-    #banner { background-size: cover; height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #f2f2f2; text-shadow: 2px 2px 6px #000; border-bottom: 3px solid #8b0000; filter: grayscale(100%); }
+    #banner { background-size: cover; background-position: center; height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #f2f2f2; text-shadow: 2px 2px 6px #000; border-bottom: 3px solid #8b0000; filter: grayscale(100%); overflow: hidden; position: relative; }
+    #banner:hover { overflow: auto; }
     #banner h1 { font-size: 60px; margin: 0; letter-spacing: 2px; }
     #banner h2 { font-size: 28px; margin: 8px 0 0 0; }
     .enigma { margin: 50px auto; max-width: 800px; font-size: 22px; line-height: 1.6; padding: 20px; border: 1px solid #333; background-color: #1a1a1a; border-radius: 8px; }
     #dica { font-style: italic; margin-top: 20px; }
     input[type="text"] { padding: 12px; font-size: 20px; width: 280px; margin-top: 20px; border-radius: 4px; border: none; }
-    button { padding: 12px 24px; font-size: 20px; margin-left: 12px; cursor: pointer; background-color: #8b0000; color: #f2f2f2; border: none; border-radius: 4px; }
+    button { padding: 12px 24px; font-size: 20px; margin: 12px 6px 0 6px; cursor: pointer; background-color: #8b0000; color: #f2f2f2; border: none; border-radius: 4px; }
     button:hover { background-color: #a30000; }
     .oculto { color: #0d0d0d; }
   </style>
 </head>
 <body>
 <div id="abertura"><h1>Abandonai a esperança, ó vós que entrais</h1></div>
-<audio id="audioFundo" src="tua-musica.mp3" autoplay loop></audio>
+<audio id="audioErro" src="tua-musica.mp3"></audio>
 <div id="banner"><h1>O Inferno de Dante</h1><h2 id="circulo">Círculo 1 - Limbo</h2></div>
 <div class="enigma" id="enigma"></div>
 <div id="dica"></div>
-<input type="text" id="resposta"><button onclick="verificarResposta()">Enviar</button>
+<input type="text" id="resposta"><br>
+<button onclick="verificarResposta()">Enviar</button>
+<button onclick="tocarSom()">Tocar Som</button>
+<button onclick="mutarSom()">Mutar</button>
 <script>
 const imagens = ['dore-1.jpg','dore-2.jpg','dore-3.jpg','dore-4.jpg','dore-5.jpg','dore-6.jpg','dore-7.jpg','dore-8.jpg','caravaggio.jpg'];
 let imagemEscolhida = imagens[Math.floor(Math.random() * imagens.length)];
@@ -42,7 +46,9 @@ const enigmas = [
 ];
 let indice = 0;
 function carregarEnigma(){document.getElementById('enigma').innerHTML=enigmas[indice].texto;document.getElementById('circulo').innerText=enigmas[indice].circulo;document.getElementById('resposta').value='';document.getElementById('dica').innerText='';carregarBanner();}
-function verificarResposta(){const input=document.getElementById('resposta').value.trim().toUpperCase();if(input===enigmas[indice].resposta){indice++;if(indice<enigmas.length){carregarEnigma();}else{document.getElementById('enigma').innerText='Você desvendou os enigmas do Inferno. Mas o verdadeiro terror só começa agora...';document.getElementById('resposta').style.display='none';document.querySelector('button').style.display='none';document.getElementById('circulo').innerText='Inferno Conquistado';}}else{alert('Resposta errada, alma condenada.');location.reload();}}
+function verificarResposta(){const input=document.getElementById('resposta').value.trim().toUpperCase();if(input===enigmas[indice].resposta){indice++;if(indice<enigmas.length){carregarEnigma();}else{document.getElementById('enigma').innerText='Você desvendou os enigmas do Inferno. Mas o verdadeiro terror só começa agora...';document.getElementById('resposta').style.display='none';document.querySelector('button').style.display='none';document.getElementById('circulo').innerText='Inferno Conquistado';}}else{document.getElementById('audioErro').play();alert('Resposta errada, alma condenada.');location.reload();}}
+function tocarSom(){document.getElementById('audioErro').play();}
+function mutarSom(){document.getElementById('audioErro').pause();document.getElementById('audioErro').currentTime=0;}
 setTimeout(()=>{document.getElementById('abertura').style.display='none';},4000);
 carregarEnigma();
 </script>

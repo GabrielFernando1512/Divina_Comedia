@@ -177,22 +177,28 @@
 <script>
   // Introdução sequencial do Virgílio
   let etapa = 0;
-  const musica = document.getElementById('musica');
-  function mostrarProximo() {
-    etapa++;
-    if (etapa === 1) {
-      document.getElementById('fala1').style.display = 'block';
-    } else if (etapa === 2) {
-      document.getElementById('placa').style.display = 'block';
-    } else if (etapa === 3) {
-      document.getElementById('fala2').style.display = 'block';
-      document.getElementById('btnProsseguir').innerText = 'Começar';
-    } else {
-      document.getElementById('abertura').style.display = 'none';
-      musica.play();
-      carregarEnigma();
-    }
+
+function mostrarProximo() {
+  etapa++;
+  const btn = document.getElementById('btnProsseguir');
+
+  if (etapa === 1) {
+    document.getElementById('fala1').style.display = 'block';
+    btn.style.display = 'none';  // botão escondido na primeira fala
+  } else if (etapa === 2) {
+    document.getElementById('placa').style.display = 'block';
+    btn.style.display = 'inline-block'; // botão aparece
+  } else if (etapa === 3) {
+    document.getElementById('fala2').style.display = 'block';
+    btn.innerText = 'CProsseguir';
+    // botão continua aparecendo pra começar
+  } else {
+    document.getElementById('abertura').style.display = 'none';
+    musica.play();
+    carregarEnigma();
   }
+}
+
 
   // Controle de mutar/desmutar música
   let tocando = true;
@@ -275,7 +281,8 @@ function carregarBanner() {
   }
 
   function abrirLightbox() {
-    document.getElementById('imagemAmpliada').src = imagemEscolhida;
+    const imagem = document.getElementById('banner').getAttribute('data-imagem');
+    document.getElementById('imagemAmpliada').src = imagem;
     document.getElementById('lightbox').style.display = 'flex';
   }
 
@@ -284,8 +291,18 @@ function carregarBanner() {
   }
 
   window.onload = function() {
+  if (sessionStorage.getItem('aberturaFeita')) {
+    document.getElementById('abertura').style.display = 'none';
+    musica.play();
     carregarEnigma();
+  } else {
+    mostrarProximo(); // abre a primeira fala automaticamente
+    sessionStorage.setItem('aberturaFeita', 'true');
   }
+};
+
+
+
 </script>
 
 </body>

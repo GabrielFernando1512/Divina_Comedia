@@ -182,22 +182,18 @@ function mostrarProximo() {
   etapa++;
   const btn = document.getElementById('btnProsseguir');
 
-  if (etapa === 1) {
-    document.getElementById('fala1').style.display = 'block';
-    btn.style.display = 'none';  // botão escondido na primeira fala
-  } else if (etapa === 2) {
+  if (etapa === 2) {
     document.getElementById('placa').style.display = 'block';
-    btn.style.display = 'inline-block'; // botão aparece
   } else if (etapa === 3) {
     document.getElementById('fala2').style.display = 'block';
-    btn.innerText = 'CProsseguir';
-    // botão continua aparecendo pra começar
-  } else {
+    btn.innerText = 'Começar';
+  } else if (etapa === 4) {
     document.getElementById('abertura').style.display = 'none';
     musica.play();
     carregarEnigma();
   }
 }
+
 
 
   // Controle de mutar/desmutar música
@@ -296,10 +292,13 @@ function carregarBanner() {
     musica.play();
     carregarEnigma();
   } else {
-    mostrarProximo(); // abre a primeira fala automaticamente
+    document.getElementById('fala1').style.display = 'block';
+    document.getElementById('btnProsseguir').style.display = 'inline-block';
+    etapa = 1;
     sessionStorage.setItem('aberturaFeita', 'true');
   }
 };
+
 
 
 

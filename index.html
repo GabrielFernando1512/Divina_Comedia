@@ -136,6 +136,22 @@
       max-height: 90%;
       border: 5px solid #8b0000;
     }
+    #transicao {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      color: #f2f2f2;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
+    }
   </style>
 </head>
 <body>
@@ -167,12 +183,7 @@
 </div>
 
 <!-- Tela de transição -->
-<div id="transicao" style="display:none;
-     position:fixed;top:0;left:0;width:100%;height:100%;
-     background:#000;color:#f2f2f2;z-index:9999;
-     display:flex;flex-direction:column;
-     justify-content:center;align-items:center;
-     text-align:center;padding:40px;">
+<div id="transicao">
   <p id="textoTransicao" style="font-size:24px;max-width:800px;margin-bottom:30px;"></p>
   <a id="arquivoTransicao"
      href="A_Divina_Comedia.pdf"
@@ -188,41 +199,40 @@
   </button>
 </div>
 
-
 <div class="enigma" id="enigma"></div>
 <div id="dica"></div>
 
 <input type="text" id="resposta" /><br />
 
-<button onclick="verificarResposta()">Enviar</button>
-<button onclick="mutarSom()">Mutar / Desmutar Música</button>
+<button id="btnEnviarResposta" onclick="verificarResposta()">Enviar</button>
+<button id="btnMutar" onclick="mutarSom()">Mutar / Desmutar Música</button>
 
 <script>
-  // Introdução sequencial do Virgílio
-  let etapa = 0;
-
-function mostrarProximo() {
-  etapa++;
-  const btn = document.getElementById('btnProsseguir');
-
-  if (etapa === 2) {
-    document.getElementById('placa').style.display = 'block';
-  } else if (etapa === 3) {
-    document.getElementById('fala2').style.display = 'block';
-    btn.innerText = 'Começar';
-  } else if (etapa === 4) {
-    document.getElementById('abertura').style.display = 'none';
-    musica.play();
-    carregarEnigma();
-  }
-}
-
-
-
-  // Controle de mutar/desmutar música
+  let musica;
   let tocando = true;
+  let etapa = 0;
+  let indice = 0;
+
+  function mostrarProximo() {
+    etapa++;
+    const btn = document.getElementById('btnProsseguir');
+
+    if (etapa === 1) {
+      document.getElementById('fala1').style.display = 'block';
+    } else if (etapa === 2) {
+      document.getElementById('placa').style.display = 'block';
+    } else if (etapa === 3) {
+      document.getElementById('fala2').style.display = 'block';
+      btn.innerText = 'Começar';
+    } else if (etapa === 4) {
+      document.getElementById('abertura').style.display = 'none';
+      musica.play();
+      carregarEnigma();
+    }
+  }
+
   function mutarSom() {
-    if(tocando){
+    if (tocando) {
       musica.pause();
       tocando = false;
     } else {
@@ -231,17 +241,15 @@ function mostrarProximo() {
     }
   }
 
-  // Imagens para o banner
   const imagens = ['dore-1.jpg','dore-2.jpg','dore-3.jpg','dore-4.jpg','dore-5.jpg','dore-6.jpg','dore-7.jpg','dore-8.jpg','caravaggio.jpg'];
 
-function carregarBanner() {
-  const imagemEscolhida = imagens[Math.floor(Math.random() * imagens.length)];
-  const banner = document.getElementById('banner');
-  banner.style.backgroundImage = `url('${imagemEscolhida}')`;
-  banner.setAttribute('data-imagem', imagemEscolhida);
-}
+  function carregarBanner() {
+    const imagemEscolhida = imagens[Math.floor(Math.random() * imagens.length)];
+    const banner = document.getElementById('banner');
+    banner.style.backgroundImage = `url('${imagemEscolhida}')`;
+    banner.setAttribute('data-imagem', imagemEscolhida);
+  }
 
-  // Enigmas no tom do Virgílio
   const enigmas = [
     {
       circulo: 'Círculo 1 - Limbo',
@@ -250,7 +258,7 @@ function carregarBanner() {
     },
     {
       circulo: 'Círculo 2 - Luxúria',
-       texto: 'Os ventos uivam sem descanso, arrastando almas desfeitas. Virgílio se Inclina e diz: \n\n<i>"Neste Redemoinho Eterno, um nome ecoa acorrentado pelos próprios desejos. Entre os que amaram além da conta, há um que tua lembrança deve trazer à tona. Somente Ela, que o amou Incansavelmente poderia te dizer."</i> <span class="oculto">(UROYQ)</span>',
+      texto: 'Os ventos uivam sem descanso, arrastando almas desfeitas. Virgílio se Inclina e diz: \n\n<i>"Neste Redemoinho Eterno, um nome ecoa acorrentado pelos próprios desejos. Entre os que amaram além da conta, há um que tua lembrança deve trazer à tona. Somente Ela, que o amou Incansavelmente poderia te dizer."</i> <span class="oculto">(UROYQ)</span>',
       resposta: 'PAOLO'
     },
     {
@@ -270,8 +278,6 @@ function carregarBanner() {
     }
   ];
 
-  let indice = 0;
-
   function carregarEnigma() {
     document.getElementById('enigma').innerHTML = enigmas[indice].texto;
     document.getElementById('circulo').innerText = enigmas[indice].circulo;
@@ -285,12 +291,12 @@ function carregarBanner() {
     if (input === enigmas[indice].resposta.toUpperCase()) {
       indice++;
       if (indice < enigmas.length) {
-        // aqui adicionamos a transição no 4° enigma (índice 3)
+        // Transição no 4° enigma (índice 3)
         if (indice === 3) {
           mostrarTransicao(
-            '<i>Virgílio observa em silêncio e então diz:</i><br><br>'
-            + '<i>"Chegaste até aqui, mas restam profundezas mais sombrias. '
-            + 'Estes escritos lhe podem ser úteis, melhor manter por perto..."</i>',
+            '<i>Virgílio observa em silêncio e então diz:</i><br><br>' +
+            '<i>"Chegaste até aqui, mas restam profundezas mais sombrias. ' +
+            'Estes escritos lhe podem ser úteis, melhor manter por perto..."</i>',
             true
           );
         } else {
@@ -299,29 +305,29 @@ function carregarBanner() {
       } else {
         // fim dos enigmas
         document.getElementById('enigma').innerHTML =
-          '<i>Virgílio sussurra: "Você desvendou todos os círculos. '
-          + 'Mas o verdadeiro teste ainda está por vir..."</i>';
+          '<i>Virgílio sussurra: "Você desvendou todos os círculos. ' +
+          'Mas o verdadeiro teste ainda está por vir..."</i>';
         document.getElementById('resposta').style.display = 'none';
-        document.querySelectorAll('button').forEach(b => b.style.display = 'none');
+        // Ocultar só os botões relacionados ao enigma, para não esconder o mutar música
+        document.getElementById('btnEnviarResposta').style.display = 'none';
+        document.getElementById('btnProsseguir').style.display = 'none';
       }
     } else {
       alert('Resposta errada, alma condenada.');
       location.reload();
+    }
   }
-}
 
   function mostrarTransicao(texto, mostrarArquivo = false) {
-  document.getElementById('textoTransicao').innerHTML = texto;
-  document.getElementById('transicao').style.display = 'flex';
-  document.getElementById('arquivoTransicao').style.display =
-    mostrarArquivo ? 'block' : 'none';
+    document.getElementById('textoTransicao').innerHTML = texto;
+    document.getElementById('transicao').style.display = 'flex';
+    document.getElementById('arquivoTransicao').style.display = mostrarArquivo ? 'block' : 'none';
   }
 
   function prosseguirTransicao() {
     document.getElementById('transicao').style.display = 'none';
     carregarEnigma();
   }
-
 
   function abrirLightbox() {
     const imagem = document.getElementById('banner').getAttribute('data-imagem');
@@ -334,39 +340,19 @@ function carregarBanner() {
   }
 
   window.onload = function() {
-  if (sessionStorage.getItem('aberturaFeita')) {
-    document.getElementById('abertura').style.display = 'none';
-    musica.play();
-    carregarEnigma();
-  } else {
-    document.getElementById('fala1').style.display = 'block';
-    document.getElementById('btnProsseguir').style.display = 'inline-block';
-    etapa = 1;
-    sessionStorage.setItem('aberturaFeita', 'true');
-  }
-};
-
+    musica = document.getElementById('musica');
+    if (sessionStorage.getItem('aberturaFeita')) {
+      document.getElementById('abertura').style.display = 'none';
+      musica.play();
+      carregarEnigma();
+    } else {
+      document.getElementById('fala1').style.display = 'block';
+      document.getElementById('btnProsseguir').style.display = 'inline-block';
+      etapa = 1;
+      sessionStorage.setItem('aberturaFeita', 'true');
+    }
+  };
 </script>
-
-<div id="transicao" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:#000; color:#f2f2f2; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:40px; z-index:99999; text-align:center;">
-  <p id="textoTransicao" style="font-size:24px; max-width:800px; margin-bottom:40px;"></p>
-  <a id="arquivoTransicao" href="A_Divina_Comedia.pdf" download style="display:none; color:#8b0000; font-size:20px; margin-bottom:20px;">📜 Baixar manuscrito</a>
-  <button onclick="prosseguirTransicao()" style="padding:14px 28px; font-size:22px; background-color:#8b0000; color:#f2f2f2; border:none; border-radius:5px; cursor:pointer;">Seguir adiante</button>
-</div>
-
-<script>
-  function mostrarTransicao(texto, mostrarArquivo=false){
-    document.getElementById('textoTransicao').innerHTML = texto;
-    document.getElementById('transicao').style.display = 'flex';
-    document.getElementById('arquivoTransicao').style.display = mostrarArquivo ? 'block' : 'none';
-  }
-
-  function prosseguirTransicao(){
-    document.getElementById('transicao').style.display = 'none';
-    carregarEnigma();
-  }
-</script>
-
 
 </body>
 </html>

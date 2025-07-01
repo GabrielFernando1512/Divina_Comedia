@@ -213,23 +213,51 @@
   let etapa = 0;
   let indice = 0;
 
-  function mostrarProximo() {
-    etapa++;
-    const btn = document.getElementById('btnProsseguir');
+  let etapa = 0;
 
-    if (etapa === 1) {
-      document.getElementById('fala1').style.display = 'block';
-    } else if (etapa === 2) {
-      document.getElementById('placa').style.display = 'block';
-    } else if (etapa === 3) {
-      document.getElementById('fala2').style.display = 'block';
-      btn.innerText = 'Começar';
-    } else if (etapa === 4) {
-      document.getElementById('abertura').style.display = 'none';
-      musica.play();
-      carregarEnigma();
-    }
+function mostrarProximo() {
+  etapa++;
+  const fala1 = document.getElementById('fala1');
+  const fala2 = document.getElementById('fala2');
+  const placa = document.getElementById('placa');
+  const btn = document.getElementById('btnProsseguir');
+
+  if (etapa === 1) {
+    fala1.style.display = 'block';
+  } else if (etapa === 2) {
+    fala1.style.display = 'none';
+    placa.style.display = 'block';
+  } else if (etapa === 3) {
+    placa.style.display = 'none';
+    fala2.style.display = 'block';
+    btn.innerText = 'Começar';
+  } else if (etapa === 4) {
+    document.getElementById('abertura').style.display = 'none';
+    sessionStorage.setItem('aberturaFeita', 'true'); // grava aqui só quando terminar
+    musica.play();
+    carregarEnigma();
   }
+}
+
+window.onload = function() {
+  musica = document.getElementById('musica');
+
+  if (sessionStorage.getItem('aberturaFeita')) {
+    // se já viu a abertura antes, pula direto
+    document.getElementById('abertura').style.display = 'none';
+    musica.play();
+    carregarEnigma();
+  } else {
+    // senão, prepara a abertura
+    etapa = 0;
+    document.getElementById('fala1').style.display = 'none';
+    document.getElementById('fala2').style.display = 'none';
+    document.getElementById('placa').style.display = 'none';
+    document.getElementById('btnProsseguir').innerText = 'Prosseguir';
+    mostrarProximo(); // já inicia com a fala1
+  }
+};
+
 
   function mutarSom() {
     if (tocando) {
@@ -337,21 +365,8 @@
 
   function fecharLightbox() {
     document.getElementById('lightbox').style.display = 'none';
-  }
-
-  window.onload = function() {
-    musica = document.getElementById('musica');
-    if (sessionStorage.getItem('aberturaFeita')) {
-      document.getElementById('abertura').style.display = 'none';
-      musica.play();
-      carregarEnigma();
-    } else {
-      document.getElementById('fala1').style.display = 'block';
-      document.getElementById('btnProsseguir').style.display = 'inline-block';
-      etapa = 1;
-      sessionStorage.setItem('aberturaFeita', 'true');
-    }
   };
+
 </script>
 
 </body>

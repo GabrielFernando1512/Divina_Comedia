@@ -43,7 +43,6 @@
       font-size: 32px;
       font-weight: bold;
       margin-bottom: 20px;
-      font-family: 'Cinzel Decorative';
     }
     #btnProsseguir {
       padding: 14px 28px;
@@ -146,7 +145,6 @@
       background: #000;
       color: #f2f2f2;
       z-index: 9999;
-      display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -216,53 +214,60 @@
 
   let etapa = 0;
 
-function mostrarProximo() {
-  etapa++;
+
+
+
+function iniciarAbertura() {
   const fala1 = document.getElementById('fala1');
   const fala2 = document.getElementById('fala2');
   const placa = document.getElementById('placa');
   const btn = document.getElementById('btnProsseguir');
 
-  if (etapa === 1) {
-    fala1.style.display = 'block';
-    btn.style.display = 'inline-block';
-  } else if (etapa === 2) {
+  fala1.style.display = 'block';
+  setTimeout(() => {
     fala1.style.display = 'none';
     placa.style.display = 'block';
-  } else if (etapa === 3) {
-    placa.style.display = 'none';
-    fala2.style.display = 'block';
-    btn.innerText = 'Começar';
-  } else if (etapa === 4) {
-    document.getElementById('abertura').style.display = 'none';
-    sessionStorage.setItem('aberturaFeita', 'true'); // grava aqui só quando terminar
-    musica.play();
-    carregarEnigma();
-  }
+    setTimeout(() => {
+      placa.style.display = 'none';
+      fala2.style.display = 'block';
+      setTimeout(() => {
+        btn.style.display = 'inline-block';
+      }, 2000);
+    }, 2000);
+  }, 2000);
 }
 
 window.onload = function() {
   musica = document.getElementById('musica');
 
+  document.getElementById('transicao').style.display = 'none';
+
   if (sessionStorage.getItem('aberturaFeita')) {
-    // se já viu a abertura antes, pula direto
     document.getElementById('abertura').style.display = 'none';
     musica.play();
     carregarEnigma();
   } else {
-    // senão, prepara a abertura
     etapa = 0;
     document.getElementById('fala1').style.display = 'none';
     document.getElementById('fala2').style.display = 'none';
     document.getElementById('placa').style.display = 'none';
     document.getElementById('btnProsseguir').style.display = 'none';
     document.getElementById('btnProsseguir').innerText = 'Prosseguir';
-    mostrarProximo(); // já inicia com a fala1
+    iniciarAbertura();
   }
 };
 
 
-  function mutarSom() {
+
+  
+function mostrarProximo() {
+  document.getElementById('abertura').style.display = 'none';
+  sessionStorage.setItem('aberturaFeita', 'true');
+  musica.play();
+  carregarEnigma();
+}
+
+function mutarSom() {
     if (tocando) {
       musica.pause();
       tocando = false;

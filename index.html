@@ -16,6 +16,7 @@
       font-family: Georgia, serif;
       text-align: center;
       padding: 20px;
+      margin: 0; /* Add this to remove default body margin */
     }
     #abertura {
       position: fixed;
@@ -172,7 +173,7 @@
 
 <audio id="audioErro" src="tua-musica.mp3"></audio>
 
-<div id="banner" onclick="abrirLightbox()">
+<div id="banner" onclick="abrirLightbox()" style="display:none;">
   <h1>O Inferno de Dante</h1>
   <h2 id="circulo">Círculo 1 - Limbo</h2>
 </div>
@@ -181,94 +182,101 @@
   <img id="imagemAmpliada" src="" />
 </div>
 
-<!-- Tela de transição -->
 <div id="transicao">
   <p id="textoTransicao" style="font-size:24px;max-width:800px;margin-bottom:30px;"></p>
   <a id="arquivoTransicao"
-     href="A_Divina_Comedia.pdf"
-     download
-     style="display:none;color:#8b0000;font-size:20px;margin-bottom:20px;">
+       href="A_Divina_Comedia.pdf"
+       download
+       style="display:none;color:#8b0000;font-size:20px;margin-bottom:20px;">
     📜 Pegar manuscrito
   </a>
   <button onclick="prosseguirTransicao()"
-          style="padding:14px 28px;font-size:22px;
-                 background-color:#8b0000;color:#f2f2f2;
-                 border:none;border-radius:5px;cursor:pointer;">
+           style="padding:14px 28px;font-size:22px;
+                   background-color:#8b0000;color:#f2f2f2;
+                   border:none;border-radius:5px;cursor:pointer;">
     Seguir adiante
   </button>
 </div>
 
-<div class="enigma" id="enigma"></div>
-<div id="dica"></div>
+<div class="enigma" id="enigma" style="display:none;"></div>
+<div id="dica" style="display:none;"></div>
 
-<input type="text" id="resposta" /><br />
+<input type="text" id="resposta" style="display:none;"/><br />
 
-<button id="btnEnviarResposta" onclick="verificarResposta()">Enviar</button>
-<button id="btnMutar" onclick="mutarSom()">Mutar / Desmutar Música</button>
+<button id="btnEnviarResposta" onclick="verificarResposta()" style="display:none;">Enviar</button>
+<button id="btnMutar" onclick="mutarSom()" style="display:none;">Mutar / Desmutar Música</button>
 
 <script>
   let musica;
   let tocando = true;
-  let etapa = 0;
-  let indice = 0;
+  let indice = 0; // Renamed from 'etapa' to avoid conflict and clarity
 
-  let etapa = 0;
+  // This function is correctly defined and called by the 'onload' handler.
+  function iniciarAbertura() {
+    const fala1 = document.getElementById('fala1');
+    const fala2 = document.getElementById('fala2');
+    const placa = document.getElementById('placa');
+    const btn = document.getElementById('btnProsseguir');
 
-
-
-
-function iniciarAbertura() {
-  const fala1 = document.getElementById('fala1');
-  const fala2 = document.getElementById('fala2');
-  const placa = document.getElementById('placa');
-  const btn = document.getElementById('btnProsseguir');
-
-  fala1.style.display = 'block';
-  setTimeout(() => {
-    fala1.style.display = 'none';
-    placa.style.display = 'block';
+    // Ensure they are initially hidden, then shown in sequence
+    fala1.style.display = 'block';
     setTimeout(() => {
-      placa.style.display = 'none';
-      fala2.style.display = 'block';
+      fala1.style.display = 'none';
+      placa.style.display = 'block';
       setTimeout(() => {
-        btn.style.display = 'inline-block';
+        placa.style.display = 'none';
+        fala2.style.display = 'block';
+        setTimeout(() => {
+          btn.style.display = 'inline-block';
+        }, 2000);
       }, 2000);
     }, 2000);
-  }, 2000);
-}
-
-window.onload = function() {
-  musica = document.getElementById('musica');
-
-  document.getElementById('transicao').style.display = 'none';
-
-  if (sessionStorage.getItem('aberturaFeita')) {
-    document.getElementById('abertura').style.display = 'none';
-    musica.play();
-    carregarEnigma();
-  } else {
-    etapa = 0;
-    document.getElementById('fala1').style.display = 'none';
-    document.getElementById('fala2').style.display = 'none';
-    document.getElementById('placa').style.display = 'none';
-    document.getElementById('btnProsseguir').style.display = 'none';
-    document.getElementById('btnProsseguir').innerText = 'Prosseguir';
-    document.getElementById('abertura').style.display = 'flex';
-    iniciarAbertura();
   }
-};
+
+  // Use DOMContentLoaded to ensure all elements are loaded before trying to access them.
+  document.addEventListener('DOMContentLoaded', function() {
+    musica = document.getElementById('musica');
+
+    // Hide main game elements initially
+    document.getElementById('banner').style.display = 'none';
+    document.getElementById('enigma').style.display = 'none';
+    document.getElementById('dica').style.display = 'none';
+    document.getElementById('resposta').style.display = 'none';
+    document.getElementById('btnEnviarResposta').style.display = 'none';
+    document.getElementById('btnMutar').style.display = 'none';
+    document.getElementById('transicao').style.display = 'none';
 
 
+    if (sessionStorage.getItem('aberturaFeita')) {
+      document.getElementById('abertura').style.display = 'none';
+      musica.play().catch(e => console.log("Audio play failed:", e)); // Add catch for autoplay policy
+      carregarEnigma();
+      mostrarElementosJogo();
+    } else {
+      document.getElementById('abertura').style.display = 'flex'; // Ensure opening is visible
+      iniciarAbertura();
+    }
+  });
 
-  
-function mostrarProximo() {
-  document.getElementById('abertura').style.display = 'none';
-  sessionStorage.setItem('aberturaFeita', 'true');
-  musica.play();
-  carregarEnigma();
-}
+  function mostrarProximo() {
+    document.getElementById('abertura').style.display = 'none';
+    sessionStorage.setItem('aberturaFeita', 'true');
+    musica.play().catch(e => console.log("Audio play failed:", e)); // Add catch for autoplay policy
+    carregarEnigma();
+    mostrarElementosJogo();
+  }
 
-function mutarSom() {
+  function mostrarElementosJogo() {
+    document.getElementById('banner').style.display = 'flex';
+    document.getElementById('enigma').style.display = 'block';
+    document.getElementById('dica').style.display = 'block';
+    document.getElementById('resposta').style.display = 'inline-block';
+    document.getElementById('btnEnviarResposta').style.display = 'inline-block';
+    document.getElementById('btnMutar').style.display = 'inline-block';
+  }
+
+
+  function mutarSom() {
     if (tocando) {
       musica.pause();
       tocando = false;
@@ -300,7 +308,7 @@ function mutarSom() {
     },
     {
       circulo: 'Círculo 3 - Gula',
-      texto: 'Ao pisar na lama pútrida, as bocas famintas ecoam sons indecifráveis. Virgílio aponta para os símbolos profanos:\n\n <i>"As almas devoradas pela gula falam em língua esquecida. Desvenda este nome oculto sob a cifra dos porcos."</i><br><br>🝕ᒧ  ᐱ⪽⟔ᒧᒪᒥ⊐ᒧ⊐☐  ☐ᐳ☐⟔🝕ᒧ  ⪽  ᒬ⟔⪽⊏☐ᐳᒧ  ⊐⪽ᐯ  ᒬ☐ᒪᒧ⊐⪽ᐯ  ⟔☐ᐱ☐ᒷᒧ  ⪽  ⊐☐ᐯᐳᒥ🝕⪽  ᐯ⪽⪾⊔⟔ᒥ⪽  ⊐☐  ⊏ᒷ⪽⟔☐🝕ᒪᒧ',
+      texto: 'Ao pisar na lama pútrida, as bocas famintas ecoam sons indecifráveis. Virgílio aponta para os símbolos profanos:\n\n <i>"As almas devoradas pela gula falam em língua esquecida. Desvenda este nome oculto sob a cifra dos porcos."</i><br><br>🝕ᒧ ᐱ⪽⟔ᒧᒪᒥ⊐ᒧ⊐☐ ☐ᐳ☐⟔🝕ᒧ ⪽ ᒬ⟔⪽⊏☐ᐳᒧ ⊐⪽ᐯ ᒬ☐ᒪᒧ⊐⪽ᐯ ⟔☐ᐱ☐ᒷᒧ ⪽ ⊐☐ᐯᐳᒥ🝕⪽ ᐯ⪽⪾⊔⟔ᒥ⪽ ⊐☐ ⊏ᒷ⪽⟔☐🝕ᒪᒧ',
       resposta: 'CIACCO'
     },
     {
@@ -347,7 +355,8 @@ function mutarSom() {
         document.getElementById('resposta').style.display = 'none';
         // Ocultar só os botões relacionados ao enigma, para não esconder o mutar música
         document.getElementById('btnEnviarResposta').style.display = 'none';
-        document.getElementById('btnProsseguir').style.display = 'none';
+        // The btnProsseguir is part of the initial opening, it should already be hidden.
+        // document.getElementById('btnProsseguir').style.display = 'none';
       }
     } else {
       alert('Resposta errada, alma condenada.');
@@ -359,11 +368,19 @@ function mutarSom() {
     document.getElementById('textoTransicao').innerHTML = texto;
     document.getElementById('transicao').style.display = 'flex';
     document.getElementById('arquivoTransicao').style.display = mostrarArquivo ? 'block' : 'none';
+    // Hide game elements during transition
+    document.getElementById('banner').style.display = 'none';
+    document.getElementById('enigma').style.display = 'none';
+    document.getElementById('dica').style.display = 'none';
+    document.getElementById('resposta').style.display = 'none';
+    document.getElementById('btnEnviarResposta').style.display = 'none';
+    document.getElementById('btnMutar').style.display = 'none';
   }
 
   function prosseguirTransicao() {
     document.getElementById('transicao').style.display = 'none';
     carregarEnigma();
+    mostrarElementosJogo(); // Show game elements again after transition
   }
 
   function abrirLightbox() {
@@ -375,7 +392,6 @@ function mutarSom() {
   function fecharLightbox() {
     document.getElementById('lightbox').style.display = 'none';
   };
-
 </script>
 
 </body>

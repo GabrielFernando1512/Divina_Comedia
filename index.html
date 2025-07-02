@@ -169,7 +169,7 @@
     Virgílio retorna a falar, sem desviar os olhos da escuridão adiante:<br />
     <i>“Estas são as palavras que selam o caminho para o tormento eterno. Nenhuma alma cruza este umbral e retorna a ser a mesma.”</i>
   </p>
-  <button id="btnProsseguir" onclick="mostrarProximo()" style="display:none";>Prosseguir</button>
+  <button id="btnProsseguir" onclick="mostrarProximo()">Prosseguir</button>
 </div>
 
 <audio id="audioErro" src="tua-musica.mp3"></audio>
@@ -225,6 +225,7 @@ function mostrarProximo() {
 
   if (etapa === 1) {
     fala1.style.display = 'block';
+    btn.style.display = 'inline-block';
   } else if (etapa === 2) {
     fala1.style.display = 'none';
     placa.style.display = 'block';
@@ -254,6 +255,7 @@ window.onload = function() {
     document.getElementById('fala1').style.display = 'none';
     document.getElementById('fala2').style.display = 'none';
     document.getElementById('placa').style.display = 'none';
+    document.getElementById('btnProsseguir').style.display = 'none';
     document.getElementById('btnProsseguir').innerText = 'Prosseguir';
     mostrarProximo(); // já inicia com a fala1
   }
